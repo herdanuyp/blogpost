@@ -4,8 +4,8 @@ import io from 'socket.io-client';
 
 import Register from './components/Register';
 import Login from './components/Login';
-import OrderProduct from './components/OrderProduct';
 import Home from './components/Home';
+import Dashboard from './components/Dashboard';
 
 function App() {
   React.useEffect(() => {
@@ -22,11 +22,11 @@ function App() {
         <Route path='/register'>
           <Register />
         </Route>
-        <Route exact path='/login'>
+        <Route path='/login'>
           <Login />
         </Route>
-        <Route exact path='/add-product'>
-          <OrderProduct />
+        <Route path='/dashboard'>
+          <Dashboard />
         </Route>
       </Switch>
     </BrowserRouter>

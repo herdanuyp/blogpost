@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { withRouter } from 'react-router';
 
 import '../assets/styles/login.css';
 
-export default function Login() {
+function Login(props) {
   const [user, setUser] = useState({ email: '', password: '' });
   const [error, setError] = useState(null);
 
@@ -19,10 +20,16 @@ export default function Login() {
     event.preventDefault();
     axios
       .post(`${process.env.REACT_APP_BACKEND_URI}/users/authentication`, user)
-      .then(result => console.log(result))
+      .then(result => {
+        localStorage.setItem('token', result.data.token);
+        props.history.push('/dashboard');
+      })
       .catch(error => {
-        console.log(error);
-        setError(error.message);
+        if (error.response.data) {
+          setError(error.response.data);
+        } else {
+          setError(error.message);
+        }
       });
   };
 
@@ -78,3 +85,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default withRouter(Login);

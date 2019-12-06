@@ -9,6 +9,7 @@ function Register() {
     password: ''
   });
   const [error, setError] = useState(null);
+  const [result, setResult] = useState(null);
 
   const handleChange = event => {
     setNewUser({
@@ -21,13 +22,18 @@ function Register() {
     event.preventDefault();
     axios
       .post(process.env.REACT_APP_BACKEND_URI + '/users/register', newUser)
-      .then(result => console.log(result))
+      .then(result => setResult(result.data.message))
       .catch(error => setError(error.response.data.message));
   };
 
   return (
     <div className='form-wrapper'>
       <div className='container '>
+        {result && (
+          <div className='alert alert-success text-center' role='alert'>
+            {result}
+          </div>
+        )}
         {error && (
           <div className='alert alert-danger text-center' role='alert'>
             {error}
