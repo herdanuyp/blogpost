@@ -6,13 +6,13 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Home from './components/Home';
 import Dashboard from './components/Dashboard';
+import NotFound from './components/NotFound';
 
 function App() {
-  React.useEffect(() => {
-    console.log('hallooo');
-    const socket = io('http://localhost:3001');
-    socket.on('socketToMe', data => console.log(data));
-  }, []);
+  // React.useEffect(() => {
+  //   const socket = io('http://localhost:3001');
+  //   socket.on('socketToMe', data => console.log(data));
+  // }, []);
   return (
     <BrowserRouter>
       <Switch>
@@ -28,6 +28,8 @@ function App() {
         <Route path='/dashboard'>
           <Dashboard />
         </Route>
+
+        <Route component={NotFound} />
       </Switch>
     </BrowserRouter>
   );
