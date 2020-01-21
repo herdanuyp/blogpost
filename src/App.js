@@ -1,36 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import io from 'socket.io-client';
 
-import Register from './components/Register';
-import Login from './components/Login';
-import Home from './components/Home';
+import Layout from './components/Layout';
+import TechnologyPost from './components/TechnologyPost';
 import Dashboard from './components/Dashboard';
 import NotFound from './components/NotFound';
+import { socket } from './helpers/io';
 
 function App() {
-  // React.useEffect(() => {
-  //   const socket = io('http://localhost:3001');
-  //   socket.on('socketToMe', data => console.log(data));
-  // }, []);
+  useEffect(() => {
+    socket.on('interupted', data => {
+      console.log(data);
+    });
+  }, []);
   return (
     <BrowserRouter>
-      <Switch>
-        <Route exact path='/'>
-          <Home />
-        </Route>
-        <Route path='/register'>
-          <Register />
-        </Route>
-        <Route path='/login'>
-          <Login />
-        </Route>
-        <Route path='/dashboard'>
-          <Dashboard />
-        </Route>
+      <Layout>
+        <Switch>
+          <Route
+            exact
+            path='/technology'
+            render={props => <TechnologyPost {...props} />}
+          />
 
-        <Route component={NotFound} />
-      </Switch>
+          <Route path='/' render={props => <Dashboard {...props} />} />
+
+          <Route path='*'>
+            <NotFound />
+          </Route>
+        </Switch>
+      </Layout>
     </BrowserRouter>
   );
 }

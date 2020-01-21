@@ -1,41 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
+
+import { socket } from '../helpers/io';
+
+import typeMachine from '../assets/images/type_404.jpg';
 
 function Dashboard() {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
   const [post, setPost] = useState({
     title: '',
-    content: ''
+    body: '',
+    topic: ''
   });
-  const [file, setFile] = useState(null);
-
-  // get post from database
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URI}/users-posts`)
-      .then(result => {
-        console.log(result);
-        setPosts(result.data.result);
-      })
-      .catch(error => setError(error.message));
-  }, []);
 
   const handleSubmit = event => {
     event.preventDefault();
-    const decoded = jwt.decode(localStorage.getItem('token'));
-    const fd = new FormData();
-    fd.append('imagePost', file);
-    fd.append('title', post.title);
-    fd.append('content', post.content);
-    fd.append('userId', decoded.user.id);
+    socket.emit('newPost', post);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URI}/users-posts`, fd)
+      .post(`${process.env.REACT_APP_BACKEND_URI}/posts`, post)
       .then(result => {
-        console.log(result);
+        console.log(result, 'result');
       })
-      .catch(error => setError(error.message));
+      .catch(error => console.log(error.message, 'error'));
   };
 
   const handleChange = event => {
@@ -45,29 +30,71 @@ function Dashboard() {
     });
   };
 
-  const handleFile = event => {
-    setFile(event.target.files[0]);
-  };
-
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='title'>Title</label>
-        <input
-          type='text'
-          name='title'
-          onChange={handleChange}
-          value={post.title}
+    <div className='container'>
+      <div className='py-5 text-center'>
+        <img
+          className='d-block mx-auto mb-4'
+          src={typeMachine}
+          alt='type-machine'
+          width='150'
+          height='150'
         />
-        <label htmlFor='content'>Content</label>
-        <textarea
-          name='content'
-          cols='30'
-          rows='10'
-          onChange={handleChange}
-          value={post.content}></textarea>
-        <input type='file' onChange={handleFile} />
-        <button>Add New Post</button>
+        <h2>Post Form</h2>
+        <p className='lead'>
+          Please be wise about what you will write down here.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className='form-group'>
+          <label>Post Title</label>
+          <input
+            type='text'
+            className='form-control'
+            aria-describedby='postTitle'
+            name='title'
+            value={post.title}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className='form-group'>
+          <label>Post Body</label>
+          <textarea
+            className='form-control'
+            rows='10'
+            name='body'
+            value={post.body}
+            onChange={handleChange}
+          ></textarea>
+        </div>
+
+        <div className='form-group'>
+          <div className='row'>
+            <div className='col-4'>
+              <label>Topic</label>
+              <select
+                className='form-control'
+                name='topic'
+                value={post.topic}
+                onChange={handleChange}
+              >
+                <option value=''>Select your topic</option>
+                <option value='Technology'>Technology</option>
+                <option value='Design'>Design</option>
+                <option value='Culture'>Culture</option>
+                <option value='Health'>Health</option>
+                <option value='Style'>Style</option>
+                <option value='Travel'>Travel</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button type='submit' className='btn btn-primary mb-4'>
+          Submit
+        </button>
       </form>
 
       <div id='posts'>{/* Our Post */}</div>

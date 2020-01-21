@@ -8,7 +8,8 @@ const notFoundContainer = {
   height: '100%',
   textAlign: 'center',
   color: 'white',
-  width: '789px'
+  width: '789px',
+  marginBottom: 24
 };
 
 const notFoundText = {
@@ -20,13 +21,9 @@ const notFoundText = {
 
 export default function NotFound() {
   return (
-    <div className='container'>
-      <Home>
-        <div className='container' style={notFoundContainer}>
-          <img src={type} alt='type' style={{width: '100%'}} />
-          <div style={notFoundText}>Not Found</div>
-        </div>
-      </Home>
+    <div className='container' style={notFoundContainer}>
+      <img src={type} alt='type' style={{ width: '100%' }} />
+      <div style={notFoundText}>Not Found</div>
     </div>
   );
 }

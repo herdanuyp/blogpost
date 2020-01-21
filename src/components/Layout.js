@@ -4,7 +4,7 @@ import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 import '../assets/styles/home.css';
 import TechnologyPost from './TechnologyPost';
 
-export default function Home(props) {
+export default function Layout(props) {
   let { path, url } = useRouteMatch();
 
   return (
@@ -91,11 +91,7 @@ export default function Home(props) {
       </div>
 
       <main>
-        <Switch>
-          <Route path={`${path}technology`}>
-            <TechnologyPost />
-          </Route>
-        </Switch>
+        {props.children}
       </main>
 
       <footer className='footer py-3'>
